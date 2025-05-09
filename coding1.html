@@ -73,10 +73,10 @@
   </style>
 </head>
 <body>
-  <!-- <audio id="notif-sound" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/b775dcaab2f0b649657bed4d615818f25322b63b/ting%20sound%20effect%20no%20copyright%20.mp3"></audio> -->
-  <audio id="notif-sound-panas" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/b775dcaab2f0b649657bed4d615818f25322b63b/ting%20sound%20effect%20no%20copyright%20.mp3"></audio>
-  <audio id="notif-sound-normal" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/b775dcaab2f0b649657bed4d615818f25322b63b/ting%20sound%20effect%20no%20copyright%20.mp3"></audio>
-  <audio id="notif-sound-dingin" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/b775dcaab2f0b649657bed4d615818f25322b63b/ting%20sound%20effect%20no%20copyright%20.mp3"></audio>
+  <audio id="notif-sound" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/b775dcaab2f0b649657bed4d615818f25322b63b/ting%20sound%20effect%20no%20copyright%20.mp3"></audio> -->
+  <audio id="notif-sound-panas" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/refs/heads/master/suhu-panas.mp3"></audio>
+  <audio id="notif-sound-normal" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/refs/heads/master/suhu-normal.mp3"></audio>
+  <audio id="notif-sound-dingin" src="https://github.com/ignasiusdandy/DHT-MatkulKuliah/raw/refs/heads/master/suhu-dingin.mp3"></audio>
 
   <div class="container">
     <div class="waktu" id="waktu">12:00:00</div>
@@ -101,12 +101,17 @@
 
           // Ini untuk sound notifnya nanti
           const notifSound = document.getElementById("notif-sound");
+          const notifSoundPanas = document.getElementById("notif-sound-panas");
+          const notifSoundDingin = document.getElementById("notif-sound-dingin");
+          const notifSoundNormal = document.getElementById("notif-sound-normal");
           const suhuSound = document.getElementById("suhu-sound");
           suhuSound.classList.remove("suhu-panas", "suhu-normal", "suhu-dingin");
           let currentStatus = "";
 
           document.getElementById("suhu").textContent = suhu;
           document.getElementById("kelembapan").textContent = kelembapan;
+
+          notifSound.play();
 
           const suhuStatus = document.getElementById("status-suhu");
           if (suhu < 20) {
@@ -125,9 +130,17 @@
           
           // Ini kalau misalnya status berubah maka notif akan dijalankan
           if (currentStatus !== previousStatus) {
-          notifSound.play();
-          previousStatus = currentStatus;
-          }
+          setTimeout(() => {
+            if (currentStatus === "panas") {
+              notifSoundPanas.play();
+            } else if (currentStatus === "dingin") {
+              notifSoundDingin.play();
+            } else {
+              notifSoundNormal.play();
+            }
+            previousStatus = currentStatus;
+          }, 2000); // JEDA 2 DETIK untuk bunyi status perubahan
+        }
 
           const notif = document.getElementById("notif");
           notif.style.display = "block";
@@ -147,7 +160,7 @@
       const jam = now.getHours().toString().padStart(2, '0');
       const menit = now.getMinutes().toString().padStart(2, '0');
       const detik = now.getSeconds().toString().padStart(2, '0');
-      document.getElementById("waktu").textContent = `${jam}:${menit}:${detik}`;
+      document.getElementById("waktu").textContent = `${jam}:${menit}:${detik} `;
     };
 
     fetchData();
